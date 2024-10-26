@@ -1,125 +1,231 @@
 const {
-  sign,
   getToken,
-  wait,
-  checkCk,
+  sign,
+  tryCatchPromise,
   validateCarmeWithType,
-  User_Agent,
   getCookies,
-  checkCarmeCount,
+  checkCk,
   getUserInfo,
-  tryCatchPromise
-} = require("./common.js");
+  checkCarmeCount,
+  wait
+} = require("./common");
+
+const GAME_TYEP = 13;
 
 const request = require("request");
 
-const GAME_TYEP = 2;
-let CookieEles = getCookies();
+const moment = require("moment");
+
+const md5 = require("md5");
+
 const kami = process.env.ELE_CARME;
 
-async function fridensHelper(_0x44fa34, _0x3ca75c) {
-  _0x44fa34 = await checkCk(_0x44fa34);
-  const _0x51fd6d = {
-    "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
-    Cookie: _0x44fa34,
-    "User-Agent": User_Agent
+async function gameRequest(_0x108364, _0x2cb520) {
+  const _0x14ca42 = {
+    authority: "shopping.ele.me",
+    accept: "application/json",
+    "cache-control": "no-cache",
+    "content-type": "application/x-www-form-urlencoded",
+    cookie: _0x108364,
+    "x-miniapp-id-taobao": "3000000084905483",
+    "x-miniapp-version": "0.0.116",
+    "x-mini-appkey": "34304642",
+    "x-req-appkey": "34304642",
+    appid: "3000000084905483"
   };
 
-  const _0x9900e7 = new Date().getTime();
+  const _0xeda03f = new Date().getTime();
 
-  const _0x4ae8f4 = 12574478;
-  const _0x5f17d6 = {
-    sceneCode: "RECOMMEND_SUPPORT",
-    params: "{\"ownerId\":\"" + _0x3ca75c + "\",\"fromOfficialAccount\":false,\"channel\":\"1\",\"referUserId\":\"\",\"restaurantId\":\"\",\"referCode\":\"\",\"referChannelCode\":\"\",\"referChannelType\":\"\",\"fromWeChatApp\":false,\"bizType\":\"1\",\"v\":\"4.3\",\"chInfo\":\"ch_app_chsub_Photo\",\"from\":\"hjb_app_xbb\",\"actId\":\"1\",\"longitude\":\"120.22057268768549\",\"latitude\":\"30.17862595617771\"}"
-  };
+  const _0x45614e = 34190632;
 
-  var _0x5ea933 = "data=" + encodeURIComponent(JSON.stringify(_0x5f17d6));
+  var _0x25963c = "data=" + encodeURIComponent(JSON.stringify(_0x2cb520));
 
-  const _0x3f65ea = getToken(_0x44fa34),
-        _0x59ecd8 = _0x3f65ea.split("_")[0];
+  const _0x1fece0 = getToken(_0x108364),
+    _0x22503b = _0x1fece0.split("_")[0];
 
-  const _0x3e43d = await sign(_0x59ecd8 + "&" + _0x9900e7 + "&" + _0x4ae8f4 + "&" + JSON.stringify(_0x5f17d6), kami);
+  const _0x2a5ef3 = await sign(_0x22503b + "&" + _0xeda03f + "&" + _0x45614e + "&" + JSON.stringify(_0x2cb520), kami);
 
-  const _0x5f2fe9 = {
-    url: "https://mtop.ele.me/h5/mtop.alibaba.o2o.alsc.union.coupon.track/1.0/?jsv=2.6.1&appKey=12574478&&ttid=1601274958480%40eleme_android_10.14.3&t=" + _0x9900e7 + "&sign=" + _0x3e43d + "&api=mtop.alibaba.o2o.alsc.union.coupon.track",
+  const _0x92c123 = {
+    url: "https://shopping.ele.me/h5/mtop.miniapp.cloud.application.request/1.0/?jsv=2.6.1&appKey=34190632&t=" + _0xeda03f + "&sign=" + _0x2a5ef3 + "&api=mtop.miniapp.cloud.application.request&v=1.0&type=originaljson&ttid=1608030065155%40eleme_android_11.0.38",
     method: "POST",
-    headers: _0x51fd6d,
-    body: _0x5ea933
+    headers: _0x14ca42,
+    body: _0x25963c
   };
-  return tryCatchPromise(_0x3646fc => {
-    request(_0x5f2fe9, async (_0x540129, _0x40bcb1, _0x52637b) => {
-      if (!_0x540129 && _0x40bcb1.statusCode == 200) {
+  return tryCatchPromise(_0x4d4d6d => {
+    request(_0x92c123, async (_0x4e0c22, _0x3dcb93, _0x11d6d9) => {
+      if (!_0x4e0c22 && _0x3dcb93.statusCode === 200) {
         try {
-          const _0x6c9838 = JSON.parse(_0x52637b);
+          const _0x260da4 = JSON.parse(_0x11d6d9);
 
-          _0x3646fc(_0x6c9838);
-        } catch (_0x53998e) {
-          console.log(_0x53998e);
+          _0x4d4d6d(_0x260da4.data.data);
+        } catch (_0x190c1c) {
+          console.log(_0x11d6d9);
 
-          _0x3646fc(null);
+          _0x4d4d6d(null);
         }
       } else {
-        _0x3646fc(null);
+        _0x4d4d6d(null);
       }
     });
   });
 }
 
-function getRandom(_0xf39232, _0x3b47cc) {
-  var _0x378d8b = Math.floor(Math.random() * (_0x3b47cc - _0xf39232 + 1) + _0xf39232);
+async function getOpenId(_0x517db7) {
+  const _0xbb8f61 = new Date().getTime();
 
-  return _0x378d8b;
+  const _0x510cf2 = {
+    body: "{\"xftest\":\"hhh\",\"id\":\"1234\"}",
+    headers: "{\"Content-Type\":\"application/json;charset=UTF-8\"}",
+    instance: "INNER",
+    method: "POST",
+    options: "{\"cloudAppId\":\"45504\",\"timeout\":200,\"env\":\"online\",\"options\":{\"path\":\"pages/index/index\"}}",
+    path: "/getopenid",
+    protocols: "{\"Content-Type\":\"application/json\",\"mc-timestamp\":\"" + _0xbb8f61 + "\",\"mc-env\":\"online\"}",
+    queryString: "{}",
+    sdkVersion: "1.5.4"
+  };
+  return await gameRequest(_0x517db7, _0x510cf2);
+}
+
+function addjb(_0x22cd6d, _0x5c6186) {
+  const _0x2baad0 = {
+    accept: "application/json",
+    "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+    "content-type": "application/json"
+  };
+  let _0x1afe03 = 20;
+
+  let _0x1be390 = taobaoRequest({
+    method: "alibaba.alsc.growth.interactive.mini.game.integral.grant",
+    mini_game_grant_integral_request: {
+      amount: _0x1afe03,
+      act_id: "20221207144029906162546384",
+      biz_scene: "COMPOSE_2048",
+      collection_ids: ["20221207144029911927117215"],
+      request_id: md5("dcc2920acdae1fdea78cef9c187af558" + _0x1afe03 + moment().format("yyyy-MM-DD hh:mm:ss")).toUpperCase(),
+      property_id: "1404",
+      open_id: _0x5c6186
+    }
+  });
+
+  var _0x231acb = encodeURIComponent(_0x1be390.mini_game_grant_integral_request);
+
+  const _0x474154 = _0x1be390.sign;
+  const _0x55a70c = {
+    url: "https://eco.taobao.com/router/rest?app_key=34315415&format=json&method=alibaba.alsc.growth.interactive.mini.game.integral.grant&mini_game_grant_integral_request=" + _0x231acb + "&sign=" + _0x474154 + "&sign_method=md5&timestamp=" + _0x1be390.timestamp + "&v=2.0",
+    method: "GET",
+    headers: _0x2baad0
+  };
+  return tryCatchPromise(_0x344fdb => {
+    request(_0x55a70c, async (_0xc6cd8b, _0x39a2d8, _0x315255) => {
+      if (!_0xc6cd8b && _0x39a2d8.statusCode == 200) {
+        const _0x23052d = JSON.parse(_0x315255);
+
+        if (_0x23052d.alibaba_alsc_growth_interactive_mini_game_integral_grant_response.data) {
+          console.log("玩 2048 获得", _0x1afe03, "乐园币", "当前乐园币：" + _0x23052d.alibaba_alsc_growth_interactive_mini_game_integral_grant_response.data.account_value);
+
+          _0x344fdb(null);
+        } else {
+          let _0x1b274d = _0x23052d.alibaba_alsc_growth_interactive_mini_game_integral_grant_response.biz_error_msg;
+
+          _0x344fdb(_0x1b274d);
+
+          console.log(_0x1b274d);
+        }
+      } else {
+        _0x344fdb(_0xc6cd8b);
+      }
+    });
+  });
+}
+
+function sortASCII(_0x4a5215, _0x510c13) {
+  var _0x120e2b = [];
+  Object.keys(_0x4a5215).forEach(function (_0x2f6e52) {
+    return _0x120e2b.push(_0x2f6e52);
+  });
+
+  var _0x28d2fa = _0x510c13 ? _0x120e2b.sort() : _0x120e2b.sort().reverse(),
+    _0x741edb = {};
+
+  for (var _0x457db9 in _0x28d2fa) _0x741edb[_0x28d2fa[_0x457db9]] = _0x4a5215[_0x28d2fa[_0x457db9]];
+
+  return _0x741edb;
+}
+
+function taobaoRequest(_0x178a27) {
+  var _0x487159 = "dcc2920acdae1fdea78cef9c187af558",
+    _0x5bf7ee = {
+      app_key: 34315415,
+      timestamp: moment().format("yyyy-MM-DD hh:mm:ss"),
+      v: "2.0",
+      sign_method: "md5",
+      format: "json"
+    };
+
+  for (var _0x41f90f in _0x178a27) Object.prototype.hasOwnProperty.call(_0x178a27, _0x41f90f) && ("object" == typeof _0x178a27[_0x41f90f] ? _0x5bf7ee[_0x41f90f] = JSON.stringify(_0x178a27[_0x41f90f]) : _0x5bf7ee[_0x41f90f] = _0x178a27[_0x41f90f]);
+
+  _0x5bf7ee = sortASCII(_0x5bf7ee, !0);
+  var _0x3753c2 = "";
+
+  for (var _0x41f90f in _0x5bf7ee) Object.prototype.hasOwnProperty.call(_0x5bf7ee, _0x41f90f) && (_0x3753c2 += _0x41f90f, "object" == typeof _0x5bf7ee[_0x41f90f] ? _0x3753c2 += JSON.stringify(_0x5bf7ee[_0x41f90f]) : _0x3753c2 += _0x5bf7ee[_0x41f90f]);
+
+  var _0x57d8ff = md5(_0x487159 + _0x3753c2 + _0x487159);
+
+  _0x5bf7ee.sign = _0x57d8ff.toUpperCase();
+  return _0x5bf7ee;
 }
 
 async function start() {
-  const _0x5828a4 = process.env.ELE_FANLI_TIME;
   await validateCarmeWithType(kami, 1);
-  const _0x37acb9 = process.env.ownerId;
 
-  if (!_0x37acb9) {
-    console.log("请先配置环境变量ownerId！！");
-    process.exit(0);
-  }
+  const _0x270d53 = getCookies();
 
-  for (let _0x1208f8 = 0; _0x1208f8 < CookieEles.length; _0x1208f8++) {
-    let _0x164c60 = CookieEles[_0x1208f8];
-    _0x164c60 = await checkCk(_0x164c60, _0x1208f8);
+  for (let _0x318f4b = 0; _0x318f4b < _0x270d53.length; _0x318f4b++) {
+    const _0x508a28 = _0x270d53[_0x318f4b];
 
-    if (!_0x164c60) {
-      continue;
-    }
+    if (!_0x508a28) {
+      console.log(" ❌无效用户信息, 请重新获取ck");
+    } else {
+      try {
+        let _0x2d2586 = await checkCk(_0x508a28, _0x318f4b);
 
-    let _0x43401a = await getUserInfo(_0x164c60);
+        if (!_0x2d2586) {
+          continue;
+        }
 
-    if (!_0x43401a.encryptMobile) {
-      console.log("第", _0x1208f8 + 1, "账号失效！请重新登录！！！😭");
-      continue;
-    }
+        let _0x687c66 = await getUserInfo(_0x2d2586);
 
-    const _0x52ce8f = _0x43401a.localId;
-    await checkCarmeCount(kami, _0x52ce8f, GAME_TYEP);
-    console.log("******开始【饿了么账号", _0x1208f8 + 1, "】", _0x43401a.encryptMobile, "*********");
-    res = await fridensHelper(_0x164c60, _0x37acb9);
+        if (!_0x687c66.encryptMobile) {
+          console.log("第", _0x318f4b + 1, "账号失效！请重新登录！！！😭");
+          continue;
+        }
 
-    if (res.data.code == 0) {
-      if (res.data.message == "SUCCESS") {
-        amount = res.data.data.couponAmount / 100;
-        couponCondition = res.data.data.couponCondition / 100;
-        console.log("第", _0x1208f8 + 1, "账号,邀请成功", "被邀请人领取的红包为:满" + couponCondition + "减" + amount + "元");
+        const _0xf3fd69 = _0x687c66.localId;
+        await checkCarmeCount(kami, _0xf3fd69, GAME_TYEP);
+        console.log("******开始【饿了么账号", _0x318f4b + 1, "】", _0x687c66.encryptMobile, "*********");
+
+        let _0x17b993 = await getOpenId(_0x2d2586);
+
+        if (_0x17b993) {
+          let _0x5cf174 = await addjb(_0x2d2586, _0x17b993);
+
+          while (!_0x5cf174) {
+            console.log("延时 2 秒");
+            await wait(2);
+            _0x5cf174 = await addjb(_0x2d2586, _0x17b993);
+          }
+
+          if (_0x318f4b !== _0x270d53.length - 1) {
+            console.log("延时 5 秒，继续下一个账号");
+            await wait(5);
+          }
+        } else {
+          console.log("获取 openId 出错");
+        }
+      } catch (_0x431bb8) {
+        console.log(_0x431bb8);
       }
-    } else {
-      console.log(res.data.message || "邀请失败");
-    }
-
-    if (_0x5828a4 && _0x5828a4.indexOf("-") != -1) {
-      console.log("防止黑号延时" + _0x5828a4 + "秒");
-
-      const _0x2c394a = _0x5828a4.split("-");
-
-      await wait(getRandom(_0x2c394a[0], _0x2c394a[1]));
-    } else {
-      console.log("防止黑号延时10-30秒");
-      await wait(getRandom(10, 30));
     }
   }
 
@@ -243,18 +349,18 @@ function Env(t, e) {
         r = r ? 1 * r : 20;
         r = e && e.timeout ? e.timeout : r;
         const [o, h] = i.split("@"),
-              n = {
-          url: `http://${h}/v1/scripting/evaluate`,
-          body: {
-            script_text: t,
-            mock_type: "cron",
-            timeout: r
-          },
-          headers: {
-            "X-Key": o,
-            Accept: "*/*"
-          }
-        };
+          n = {
+            url: `http://${h}/v1/scripting/evaluate`,
+            body: {
+              script_text: t,
+              mock_type: "cron",
+              timeout: r
+            },
+            headers: {
+              "X-Key": o,
+              Accept: "*/*"
+            }
+          };
         this.post(n, (t, e, i) => s(i));
       }).catch(t => this.logErr(t));
     }
@@ -268,9 +374,9 @@ function Env(t, e) {
         this.fs = this.fs ? this.fs : require("fs");
         this.path = this.path ? this.path : require("path");
         const t = this.path.resolve(this.dataFile),
-              e = this.path.resolve(process.cwd(), this.dataFile),
-              s = this.fs.existsSync(t),
-              i = !s && this.fs.existsSync(e);
+          e = this.path.resolve(process.cwd(), this.dataFile),
+          s = this.fs.existsSync(t),
+          i = !s && this.fs.existsSync(e);
 
         if (!s && !i) {
           return {};
@@ -293,10 +399,10 @@ function Env(t, e) {
         this.fs = this.fs ? this.fs : require("fs");
         this.path = this.path ? this.path : require("path");
         const t = this.path.resolve(this.dataFile),
-              e = this.path.resolve(process.cwd(), this.dataFile),
-              s = this.fs.existsSync(t),
-              i = !s && this.fs.existsSync(e),
-              r = JSON.stringify(this.data);
+          e = this.path.resolve(process.cwd(), this.dataFile),
+          s = this.fs.existsSync(t),
+          i = !s && this.fs.existsSync(e),
+          r = JSON.stringify(this.data);
         s ? this.fs.writeFileSync(t, r) : i ? this.fs.writeFileSync(e, r) : this.fs.writeFileSync(t, r);
       }
     }
@@ -321,7 +427,7 @@ function Env(t, e) {
 
       if (/^@/.test(t)) {
         const [, s, i] = /^@(.*?)\.(.*?)$/.exec(t),
-              r = s ? this.getval(s) : "";
+          r = s ? this.getval(s) : "";
 
         if (r) {
           try {
@@ -341,8 +447,8 @@ function Env(t, e) {
 
       if (/^@/.test(e)) {
         const [, i, r] = /^@(.*?)\.(.*?)$/.exec(e),
-              o = this.getval(i),
-              h = i ? "null" === o ? null : o || "{}" : "{}";
+          o = this.getval(i),
+          h = i ? "null" === o ? null : o || "{}" : "{}";
 
         try {
           const e = JSON.parse(h);
@@ -525,7 +631,7 @@ function Env(t, e) {
         if ("object" == typeof t) {
           if (this.isLoon()) {
             let e = t.openUrl || t.url || t["open-url"],
-                s = t.mediaUrl || t["media-url"];
+              s = t.mediaUrl || t["media-url"];
             return {
               openUrl: e,
               mediaUrl: s
@@ -534,7 +640,7 @@ function Env(t, e) {
 
           if (this.isQuanX()) {
             let e = t["open-url"] || t.url || t.openUrl,
-                s = t["media-url"] || t.mediaUrl;
+              s = t["media-url"] || t.mediaUrl;
             return {
               "open-url": e,
               "media-url": s
@@ -576,7 +682,7 @@ function Env(t, e) {
 
     done(t = {}) {
       const e = new Date().getTime(),
-            s = (e - this.startTime) / 1000;
+        s = (e - this.startTime) / 1000;
       this.log("", `🔔${this.name}, 结束! 🕛 ${s} 秒`);
       this.log();
       (this.isSurge() || this.isQuanX() || this.isLoon()) && $done(t);
